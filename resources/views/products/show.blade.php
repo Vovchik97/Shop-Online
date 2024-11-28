@@ -1,15 +1,9 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $product->name }}</title>
-</head>
-<body>
-<h1>{{ $product->name }}</h1>
-<p>{{ $product->description }}</p>
-<p>Цена: {{ $product->price }} руб.</p>
-<a href="{{ route('products.index') }}">Назад к списку продуктов</a>
-</body>
-</html>
-npm install bootstrap @popperjs/core
+@extends('layouts.app')
+
+@section('content')
+    <h1>{{ $product->name }}</h1>
+    <img src="{{ $product->image }}" class="img-fluid" alt="{{ $product->name }}">
+    <p>{{ $product->description }}</p>
+    <p>Цена: {{ $product->price }} руб.</p>
+    <a href="{{ route('products.index') }}" class="btn btn-secondary">Назад</a>
+@endsection

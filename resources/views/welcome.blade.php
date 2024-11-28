@@ -16,22 +16,16 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
+            <ul class="navbar-nav me-2">
                 <li class="nav-item">
                     <a class="nav-link active" href="{{ route('home') }}">Главная</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">О нас</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Контакты</a>
-                </li>
             </ul>
-            <form class="d-flex" method="GET" action="#">
+            <form class="d-flex flex-grow-1 me-3" method="GET" action="#">
                 <input class="form-control me-2" type="search" placeholder="Поиск товаров" aria-label="Поиск">
                 <button class="btn btn-outline-success" type="submit">Поиск</button>
             </form>
-            <ul class="navbar-nav ms-3">
+            <ul class="navbar-nav">
                 @auth
                     <li class="nav-item">
                         <a class="btn btn-outline-danger" href="{{ route('logout') }}"
