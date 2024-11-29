@@ -8,15 +8,24 @@ use App\Models\Category;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::all();
-        return view('products.index', compact('products'));
+        $query = $request->input('search');
+        $categoryId = $request->input('category');
+
+        $products = Product::when($query, function ($q) use ($query) {
+            return $q->where('name', 'LIKE', '%' . $query . '%');
+        })->when($categoryId, function ($q) use ($categoryId) {
+            return $q->where('category_id', $categoryId);
+        })->paginate(12);
+
+        $categories = Category::all();
+        return view('welcome', compact('products', 'categories'));
     }
 
-    public function show(Product $product)
+    public function show($id)
     {
-        //$products = Product::find($id);
+        $product = Product::findOrFail($id);
         return view('products.show', compact('product'));
     }
 
@@ -62,5 +71,14 @@ class ProductController extends Controller
         Product::create($request->all());
 
         return redirect()->route('products.index')->with('success', 'Товар успешно создан');
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $products = Product::where('name', 'LIKE', '%$query%')
+            ->orWhere('description', 'LIKE', '%$query%')
+            ->get();
+        return view('products.search', compact('products', 'query'));
     }
 }

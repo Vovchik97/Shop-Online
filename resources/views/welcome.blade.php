@@ -16,13 +16,13 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-2">
+            <ul class="navbar-nav me-auto">
                 <li class="nav-item">
                     <a class="nav-link active" href="{{ route('home') }}">Главная</a>
                 </li>
             </ul>
-            <form class="d-flex flex-grow-1 me-3" method="GET" action="#">
-                <input class="form-control me-2" type="search" placeholder="Поиск товаров" aria-label="Поиск">
+            <form class="d-flex flex-grow-1 me-3" method="GET" action="{{ route('home') }}">
+                <input class="form-control me-2" type="search" name="search" placeholder="Поиск товаров" value="{{ request('search') }}">
                 <button class="btn btn-outline-success" type="submit">Поиск</button>
             </form>
             <ul class="navbar-nav">
@@ -54,43 +54,50 @@
     <div class="container">
         <h1 class="display-4">Добро пожаловать в интернет-магазин ВелоМото!</h1>
         <p class="lead">Лучший выбор велосипедов и мотоциклов в одном месте</p>
-        <a href="#" class="btn btn-light btn-lg">Посмотреть товары</a>
     </div>
 </header>
 
 <!-- Контент -->
 <div class="container my-5">
-    <h2 class="text-center">Популярные товары</h2>
-    <div class="row mt-4">
-        <!-- Пример карточек товаров -->
-        <div class="col-md-4">
-            <div class="card">
-                <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Товар">
-                <div class="card-body">
-                    <h5 class="card-title">Название товара</h5>
-                    <p class="card-text">Краткое описание товара. Цена: 10,000 руб.</p>
-                    <a href="#" class="btn btn-primary">Подробнее</a>
-                </div>
-            </div>
+    <div class="row">
+        <!-- Секция категорий -->
+        <div class="col-md-3">
+            <h4>Категории</h4>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <a href="{{ route('home') }}">Все товары</a>
+                </li>
+                @foreach ($categories as $category)
+                    <li class="list-group-item">
+                        <a href="{{ route('home', ['category' => $category->id]) }}">
+                            {{ $category->name }}
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
         </div>
-        <div class="col-md-4">
-            <div class="card">
-                <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Товар">
-                <div class="card-body">
-                    <h5 class="card-title">Название товара</h5>
-                    <p class="card-text">Краткое описание товара. Цена: 20,000 руб.</p>
-                    <a href="#" class="btn btn-primary">Подробнее</a>
-                </div>
+        <!-- Секция товаров -->
+        <div class="col-md-9">
+            <h2 class="text-center">Популярные товары</h2>
+            <div class="row mt-4">
+                @forelse ($products as $product)
+                    <div class="col-md-4">
+                        <div class="card mb-3">
+                            <img src="{{ asset('storage/' . $product->image) }}" class="card-img-top" alt="{{ $product->name }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ $product->name }}</h5>
+                                <p class="card-text">{{ $product->price }} ₽</p>
+                                <a href="{{ route('product.show', $product->id) }}" class="btn btn-primary">Подробнее</a>
+                                <a href="#" class="btn btn-primary">Добавить в корзину</a>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <p class="text-center">Нет доступных товаров.</p>
+                @endforelse
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Товар">
-                <div class="card-body">
-                    <h5 class="card-title">Название товара</h5>
-                    <p class="card-text">Краткое описание товара. Цена: 30,000 руб.</p>
-                    <a href="#" class="btn btn-primary">Подробнее</a>
-                </div>
+            <div class="mt-3">
+                {{ $products->links() }}
             </div>
         </div>
     </div>
