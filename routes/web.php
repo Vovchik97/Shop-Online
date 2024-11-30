@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CartController;
 
 Route::get('/', [ProductController::class, 'index'])->name('home');
 
@@ -31,5 +32,11 @@ Route::get('/products/search', [ProductController::class, 'search'])->name('prod
 Route::resource('products', ProductController::class);
 
 Route::resource('categories', CategoryController::class)->middleware('auth');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
+    Route::delete('/cart/{cartItem}', [CartController::class, 'destroy'])->name('cart.destroy');
+});
 
 require __DIR__.'/auth.php';
