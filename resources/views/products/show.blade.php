@@ -28,6 +28,11 @@
             <ul class="navbar-nav">
                 @auth
                     <li class="nav-item">
+                        <a href="{{ route('cart.index') }}" class="btn btn-outline-primary me-2">
+                            <i class="bi bi-cart"></i> 🛒 Корзина
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="btn btn-outline-danger" href="{{ route('logout') }}"
                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             Выйти
@@ -68,7 +73,12 @@
             <p>{{ $product->description }}</p>
             <p class="lead">Цена: {{ $product->price }} ₽</p>
             @auth
-                <a href="#" class="btn btn-primary">Добавить в корзину</a>
+                <form action="{{ route('cart.store') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                    <input type="hidden" name="quantity" value="1"> <!-- Количество всегда 1 -->
+                    <button type="submit" class="btn btn-primary">Добавить в корзину</button> <!-- Синяя кнопка -->
+                </form>
             @else
                 <a href="{{ route('login') }}" class="btn btn-secondary">Войдите, чтобы добавить в корзину</a>
             @endauth
@@ -83,5 +93,19 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Swal.fire({
+                icon: 'success',
+                title: 'Успех!',
+                text: '{{ session('success') }}',
+                confirmButtonText: 'Ок',
+            });
+        });
+    </script>
+@endif
 </body>
 </html>

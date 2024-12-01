@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
 
 Route::get('/', [ProductController::class, 'index'])->name('home');
 
@@ -37,6 +38,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
     Route::delete('/cart/{cartItem}', [CartController::class, 'destroy'])->name('cart.destroy');
+});
+
+Route::middleware(['auth'])->group(function () {
+   Route::post('/order', [OrderController::class, 'store'])->name('order.store');
 });
 
 require __DIR__.'/auth.php';

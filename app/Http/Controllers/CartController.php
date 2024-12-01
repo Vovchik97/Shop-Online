@@ -42,13 +42,18 @@ class CartController extends Controller
             ]);
         }
 
-        return redirect()->route('cart.index')->with('success', 'Корзина обновлена');
+        // Сохраняем сообщение в сессии
+        session()->flash('success', 'Товар успешно добавлен в корзину!');
+
+        // Возвращаемся на ту же страницу
+        return back();
+        //return redirect()->route('home')->with('success', 'Товар добавлен в корзину');
     }
 
 
     public function destroy(Cart $cartItem)
     {
         $cartItem->delete();
-        return redirect()->route('cart.index')->with('success', 'Товар удален из корзины');
+        return redirect()->route('cart.index');
     }
 }

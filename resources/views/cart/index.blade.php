@@ -69,7 +69,7 @@
 <div class="container my-5">
     @if ($cartItems->isEmpty())
         <div class="alert alert-warning text-center">
-            Ваша корзина пуста. <a href="{{ route('home') }}" class="btn btn-outline-light">Вернуться к покупкам</a>
+            Ваша корзина пуста. <a href="{{ route('home') }}" class="btn btn-primary">Вернуться к покупкам</a>
         </div>
     @else
         <div class="row">
@@ -111,7 +111,11 @@
             <h4>Общая сумма:
                 <span class="text-success">{{ $cartItems->sum(fn($item) => $item->product->price * $item->quantity) }} ₽</span>
             </h4>
-            <a href="#" class="btn btn-success">Перейти к оформлению</a>
+            <a href="#" onclick="event.preventDefault(); document.getElementById('order-form').submit();" class="btn btn-success">Перейти к оформлению</a>
+
+            <form id="order-form" action="{{ route('order.store') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
         </div>
     @endif
 </div>

@@ -126,5 +126,19 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Swal.fire({
+                icon: 'success',
+                title: 'Успех!',
+                text: '{{ session('success') }}',
+                confirmButtonText: 'Ок',
+            });
+        });
+    </script>
+@endif
 </body>
 </html>
