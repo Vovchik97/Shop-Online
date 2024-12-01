@@ -67,7 +67,11 @@
             <h3>Описание</h3>
             <p>{{ $product->description }}</p>
             <p class="lead">Цена: {{ $product->price }} ₽</p>
-            <a href="#" class="btn btn-primary">Добавить в корзину</a>
+            @auth
+                <a href="#" class="btn btn-primary">Добавить в корзину</a>
+            @else
+                <a href="{{ route('login') }}" class="btn btn-secondary">Войдите, чтобы добавить в корзину</a>
+            @endauth
         </div>
     </div>
 </div>

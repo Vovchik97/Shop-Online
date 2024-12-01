@@ -18,20 +18,33 @@ class CartController extends Controller
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|integer|min:1',  // Валидация для количества
         ]);
 
-        $cartItem = Cart::updateOrCreate(
-          [
-              'user_id' => auth()->id(),
-              'product_id' => $request->product_id,
-          ],
-          [
-              'quantity' => DB::raw('quantity + 1'),
-          ]
-        );
+        // Получаем введённое количество
+        $quantity = $request->input('quantity');
 
-        return redirect()->route('cart.index')->with('success', 'Товар добавлен в корзину');
+        // Проверяем, существует ли товар в корзине
+        $cartItem = Cart::where('user_id', auth()->id())
+            ->where('product_id', $request->product_id)
+            ->first();
+
+        if ($cartItem) {
+            // Если товар уже есть в корзине, обновляем количество
+            $cartItem->quantity = $quantity;
+            $cartItem->save();
+        } else {
+            // Если товара нет в корзине, добавляем его с количеством
+            Cart::create([
+                'user_id' => auth()->id(),
+                'product_id' => $request->product_id,
+                'quantity' => $quantity,
+            ]);
+        }
+
+        return redirect()->route('cart.index')->with('success', 'Корзина обновлена');
     }
+
 
     public function destroy(Cart $cartItem)
     {

@@ -21,15 +21,15 @@
                     <a class="nav-link active" href="{{ route('home') }}">Главная</a>
                 </li>
             </ul>
-            <form class="d-flex me-auto" method="GET" action="#">
-                <input class="form-control me-2" type="search" placeholder="Поиск товаров" aria-label="Поиск">
+            <form class="d-flex flex-grow-1 me-3" method="GET" action="{{ route('home') }}">
+                <input class="form-control me-2" type="search" name="search" placeholder="Поиск товаров" value="{{ request('search') }}">
                 <button class="btn btn-outline-success" type="submit">Поиск</button>
             </form>
             <ul class="navbar-nav">
                 @auth
                     <li class="nav-item">
                         <a href="{{ route('cart.index') }}" class="btn btn-outline-primary me-2">
-                            <i class="bi bi-cart"></i> Корзина
+                            <i class="bi bi-cart"></i> 🛒 Корзина
                         </a>
                     </li>
                     <li class="nav-item">
@@ -96,10 +96,11 @@
                                 <a href="{{ route('product.show', $product->id) }}" class="btn btn-primary">Подробнее</a>
 
                                 @auth
-                                    <form action="{{ route('cart.store') }}" method="POST" class="d-inline">
+                                    <form action="{{ route('cart.store') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                        <button type="submit" class="btn btn-primary">Добавить в корзину</button>
+                                        <input type="hidden" name="quantity" value="1"> <!-- Количество всегда 1 -->
+                                        <button type="submit" class="btn btn-primary">Добавить в корзину</button> <!-- Синяя кнопка -->
                                     </form>
                                 @else
                                     <a href="{{ route('login') }}" class="btn btn-secondary">Войдите, чтобы добавить в корзину</a>
