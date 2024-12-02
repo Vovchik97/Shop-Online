@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Интернет-магазин</title>
-    <!-- Bootstrap CSS -->
+    <title>Детали заказа №{{ $order->id }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -59,68 +58,34 @@
     </div>
 </nav>
 
-
 <!-- Приветственный блок -->
 <header class="bg-primary text-white text-center py-5">
     <div class="container">
-        <h1 class="display-4">Добро пожаловать в интернет-магазин ВелоМото!</h1>
-        <p class="lead">Лучший выбор велосипедов и мотоциклов в одном месте</p>
+        <h1 class="display-4">Детали заказа №{{ $order->id }}</h1>
+        <p class="lead">Просмотрите детали вашего заказа</p>
     </div>
 </header>
 
-<!-- Контент -->
+<!-- Основной контент -->
 <div class="container my-5">
-    <div class="row">
-        <!-- Секция категорий -->
-        <div class="col-md-3">
-            <h4>Категории</h4>
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <a href="{{ route('home') }}">Все товары</a>
-                </li>
-                @foreach ($categories as $category)
-                    <li class="list-group-item">
-                        <a href="{{ route('home', ['category' => $category->id]) }}">
-                            {{ $category->name }}
-                        </a>
+    <div class="card mb-4">
+        <div class="card-header">
+            Заказ №{{ $order->id }} — {{ $order->created_at->format('d.m.Y H:i') }}
+        </div>
+        <div class="card-body">
+            <h5>Продукты в заказе:</h5>
+            <ul>
+                @foreach ($order->products as $product)
+                    <li>
+                        {{ $product->name }} — {{ $product->pivot->quantity }} шт. по цене {{ $product->pivot->price }} ₽
                     </li>
                 @endforeach
             </ul>
+            <strong>Итоговая стоимость: {{ $order->total_price }} ₽</strong>
         </div>
-        <!-- Секция товаров -->
-        <div class="col-md-9">
-            <h2 class="text-center">Популярные товары</h2>
-            <div class="row mt-4">
-                @forelse ($products as $product)
-                    <div class="col-md-4">
-                        <div class="card mb-3">
-                            <img src="{{ asset('storage/' . $product->image) }}" class="card-img-top" alt="{{ $product->name }}">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ $product->name }}</h5>
-                                <p class="card-text">{{ $product->price }} ₽</p>
-                                <a href="{{ route('product.show', $product->id) }}" class="btn btn-primary">Подробнее</a>
-
-                                @auth
-                                    <form action="{{ route('cart.store') }}" method="POST">
-                                        @csrf
-                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                        <input type="hidden" name="quantity" value="1"> <!-- Количество всегда 1 -->
-                                        <button type="submit" class="btn btn-primary">Добавить в корзину</button> <!-- Синяя кнопка -->
-                                    </form>
-                                @else
-                                    <a href="{{ route('login') }}" class="btn btn-secondary">Войдите, чтобы добавить в корзину</a>
-                                @endauth
-                            </div>
-                        </div>
-                    </div>
-                @empty
-                    <p class="text-center">Нет доступных товаров.</p>
-                @endforelse
-            </div>
-            <div class="mt-3">
-                {{ $products->links() }}
-            </div>
-        </div>
+    </div>
+    <div class="text-center mt-4">
+        <a href="{{ route('orders.history') }}" class="btn btn-secondary">Вернуться к истории заказов</a>
     </div>
 </div>
 
@@ -129,21 +94,7 @@
     <p>&copy; 2024 ВелоМото. Все права защищены.</p>
 </footer>
 
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-@if(session('success'))
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            Swal.fire({
-                icon: 'success',
-                title: 'Успех!',
-                text: '{{ session('success') }}',
-                confirmButtonText: 'Ок',
-            });
-        });
-    </script>
-@endif
 </body>
 </html>
+
