@@ -8,6 +8,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 
+use MoonShine\Models\MoonshineUser;
+
 Route::get('/', [ProductController::class, 'index'])->name('home');
 
 Route::get('/dashboard', function () {
@@ -46,6 +48,23 @@ Route::middleware(['auth'])->group(function () {
    Route::get('/orders', [OrderController::class, 'history'])->name('orders.history');
    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
 });
+
+Route::get('/admin-panel', function () {
+    $user = auth()->user();
+
+    if ($user &&$user->role === 'admin') {
+        $moonshineUser = MoonshineUser::where('email', $user->email)->first();
+
+        if ($moonshineUser) {
+            auth('moonshine')->login($moonshineUser);
+            return redirect(route('moonshine.index'));
+        }
+
+        return redirect('/')->with('error', 'У вас нет доступа к админ-панели');
+    }
+
+    return redirect('/')->with('error', 'Доступ запрещён');
+})->middleware('auth');
 
 
 require __DIR__.'/auth.php';

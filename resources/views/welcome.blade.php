@@ -27,6 +27,9 @@
             </form>
             <ul class="navbar-nav">
                 @auth
+                    @if(auth()->check() && auth()->user()->role === 'admin')
+                        <li><a href="{{ url('/admin-panel') }}" class="btn btn-outline-primary me-2">Админ-панель</a></li>
+                    @endif
                     <li class="nav-item">
                         <a href="{{ route('cart.index') }}" class="btn btn-outline-primary me-2">
                             <i class="bi bi-cart"></i> 🛒 Корзина
@@ -73,19 +76,33 @@
     <div class="row">
         <!-- Секция категорий -->
         <div class="col-md-3">
-            <h4>Категории</h4>
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <a href="{{ route('home') }}">Все товары</a>
-                </li>
-                @foreach ($categories as $category)
-                    <li class="list-group-item">
-                        <a href="{{ route('home', ['category' => $category->id]) }}">
-                            {{ $category->name }}
-                        </a>
-                    </li>
-                @endforeach
-            </ul>
+            <h4>Фильтры</h4>
+            <form method="GET" action="{{ route('home') }}">
+                <!-- Категории -->
+                <div class="mb-3">
+                    <label for="category" class="form-label">Категория</label>
+                    <select class="form-select" id="category" name="category">
+                        <option value="">Все категории</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Фильтр по цене -->
+                <div class="mb-3">
+                    <label for="price_from" class="form-label">Цена от</label>
+                    <input type="number" class="form-control" id="price_from" name="price_from" value="{{ request('price_from') }}" placeholder="Минимальная цена">
+                </div>
+                <div class="mb-3">
+                    <label for="price_to" class="form-label">Цена до</label>
+                    <input type="number" class="form-control" id="price_to" name="price_to" value="{{ request('price_to') }}" placeholder="Максимальная цена">
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Применить фильтры</button>
+            </form>
         </div>
         <!-- Секция товаров -->
         <div class="col-md-9">
@@ -93,22 +110,22 @@
             <div class="row mt-4">
                 @forelse ($products as $product)
                     <div class="col-md-4">
-                        <div class="card mb-3">
-                            <img src="{{ asset('storage/' . $product->image) }}" class="card-img-top" alt="{{ $product->name }}">
-                            <div class="card-body">
+                        <div class="card product-card mb-3">
+                            <img src="{{ asset('storage/' . $product->image) }}" class="card-img-top" alt="{{ $product->name }}" style="height: 200px; object-fit: cover;">
+                            <div class="card-body d-flex flex-column justify-content-between">
                                 <h5 class="card-title">{{ $product->name }}</h5>
                                 <p class="card-text">{{ $product->price }} ₽</p>
-                                <a href="{{ route('product.show', $product->id) }}" class="btn btn-primary">Подробнее</a>
+                                <a href="{{ route('product.show', $product->id) }}" class="btn btn-primary w-100 mb-2">Подробнее</a>
 
                                 @auth
                                     <form action="{{ route('cart.store') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                        <input type="hidden" name="quantity" value="1"> <!-- Количество всегда 1 -->
-                                        <button type="submit" class="btn btn-primary">Добавить в корзину</button> <!-- Синяя кнопка -->
+                                        <input type="hidden" name="quantity" value="1">
+                                        <button type="submit" class="btn btn-primary w-100 mb-2">Добавить в корзину</button>
                                     </form>
                                 @else
-                                    <a href="{{ route('login') }}" class="btn btn-secondary">Войдите, чтобы добавить в корзину</a>
+                                    <a href="{{ route('login') }}" class="btn btn-secondary w-100 mb-2">Войдите, чтобы добавить в корзину</a>
                                 @endauth
                             </div>
                         </div>

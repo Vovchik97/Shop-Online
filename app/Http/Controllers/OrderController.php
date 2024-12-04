@@ -38,9 +38,16 @@ class OrderController extends Controller
     public function history()
     {
         $orders = Order::where('user_id', auth()->id())
-            ->with('cartItems.product')
+            ->with('products')
             ->orderByDesc('created_at')
             ->get();
+
+        $totalOrders = $orders->count();
+
+        $orders = $orders->map(function ($order, $index) use ($totalOrders) {
+            $order->order_number = $totalOrders - $index;
+            return $order;
+        });
 
         return view('orders.history', compact('orders'));
     }

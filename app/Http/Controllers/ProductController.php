@@ -12,11 +12,17 @@ class ProductController extends Controller
     {
         $query = $request->input('search');
         $categoryId = $request->input('category');
+        $priceFrom = $request->input('price_from');
+        $priceTo = $request->input('price_to');
 
         $products = Product::when($query, function ($q) use ($query) {
             return $q->where('name', 'LIKE', '%' . $query . '%');
         })->when($categoryId, function ($q) use ($categoryId) {
             return $q->where('category_id', $categoryId);
+        })->when($priceFrom, function ($q) use ($priceFrom) {
+            return $q->where('price', '>=', $priceFrom);
+        })->when($priceTo, function ($q) use ($priceTo) {
+            return $q->where('price', '<=', $priceTo);
         })->paginate(12);
 
         $categories = Category::all();

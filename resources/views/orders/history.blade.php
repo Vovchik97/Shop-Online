@@ -59,7 +59,7 @@
         @foreach ($orders as $order)
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <span>Заказ №{{ $order->id }} — {{ $order->created_at->format('d.m.Y H:i') }}</span>
+                    <span>Заказ №{{ $order->order_number }} — {{ $order->created_at->format('d.m.Y H:i') }}</span>
                     <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#order-{{ $order->id }}" aria-expanded="false" aria-controls="order-{{ $order->id }}">
                         Подробнее
                     </button>
@@ -79,6 +79,7 @@
                 </div>
             </div>
         @endforeach
+
     @endif
 </div>
 

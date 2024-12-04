@@ -37,12 +37,21 @@ class ProductResource extends ModelResource
         return [
             Block::make([
                 ID::make()->sortable(),
-                Text::make('Название', 'name')->required(),
-                Number::make('Цена', 'price')->required(),
-                Text::make('Описание', 'description')->hideOnIndex(),
+                Text::make('Название', 'name')
+                    ->required(),
+                Number::make('Цена', 'price')
+                    ->required(),
+                Text::make('Описание', 'description')
+                    ->hideOnIndex(),
                 Select::make('Категория', 'category_id')
                     ->options(Category::pluck('name', 'id')->toArray())
                     ->required(),
+                Image::make('Изображение', 'image')
+                    ->dir('products')
+                    ->disk('public')
+                    ->allowedExtensions(['jpg', 'jpeg', 'png', 'gif', 'webp'])
+                    ->removable()
+                    ->required()
             ]),
         ];
     }
