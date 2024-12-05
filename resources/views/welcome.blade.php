@@ -107,26 +107,29 @@
         <!-- Секция товаров -->
         <div class="col-md-9">
             <h2 class="text-center">Популярные товары</h2>
-            <div class="row mt-4">
+            <div class="row row-cols-1 row-cols-md-3 g-4 mt-4">
                 @forelse ($products as $product)
-                    <div class="col-md-4">
-                        <div class="card product-card mb-3">
+                    <div class="col d-flex">
+                        <div class="card w-100">
                             <img src="{{ asset('storage/' . $product->image) }}" class="card-img-top" alt="{{ $product->name }}" style="height: 200px; object-fit: cover;">
-                            <div class="card-body d-flex flex-column justify-content-between">
-                                <h5 class="card-title">{{ $product->name }}</h5>
+                            <div class="card-body d-flex flex-column">
+                                <!-- Ограничение названия на одной строке -->
+                                <h5 class="card-title text-truncate" style="max-width: 100%;">{{ $product->name }}</h5>
                                 <p class="card-text">{{ $product->price }} ₽</p>
-                                <a href="{{ route('product.show', $product->id) }}" class="btn btn-primary w-100 mb-2">Подробнее</a>
+                                <div class="mt-auto">
+                                    <a href="{{ route('product.show', $product->id) }}" class="btn btn-primary w-100 mb-2">Подробнее</a>
 
-                                @auth
-                                    <form action="{{ route('cart.store') }}" method="POST">
-                                        @csrf
-                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                        <input type="hidden" name="quantity" value="1">
-                                        <button type="submit" class="btn btn-primary w-100 mb-2">Добавить в корзину</button>
-                                    </form>
-                                @else
-                                    <a href="{{ route('login') }}" class="btn btn-secondary w-100 mb-2">Войдите, чтобы добавить в корзину</a>
-                                @endauth
+                                    @auth
+                                        <form action="{{ route('cart.store') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                            <input type="hidden" name="quantity" value="1">
+                                            <button type="submit" class="btn btn-primary w-100 mb-2">Добавить в корзину</button>
+                                        </form>
+                                    @else
+                                        <a href="{{ route('login') }}" class="btn btn-secondary w-100 mb-2">Войдите, чтобы добавить в корзину</a>
+                                    @endauth
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -137,6 +140,7 @@
             <div class="mt-3">
                 {{ $products->links() }}
             </div>
+
         </div>
     </div>
 </div>

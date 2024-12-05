@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use MoonShine\Metrics\ValueMetric;
 use MoonShine\Pages\Page;
 use MoonShine\Components\MoonShineComponent;
+use MoonShine\Metrics\LineChartMetric;
 
 class Dashboard extends Page
 {
@@ -37,11 +38,16 @@ class Dashboard extends Page
     {
         return [
             ValueMetric::make('Общее количество товаров')->value(fn() => $this->getProductsCount()),
+            ValueMetric::make('Общее количество категорий')->value(fn() => $this->getCategoriesCount()),
             ValueMetric::make('Общее количество заказов')->value(fn() => $this->getOrdersCount()),
             ValueMetric::make('Общая выручка')->value(fn() => $this->getTotalEarnings() . ' ₽'),
             ValueMetric::make('Прогноз продаж (на день)')->value(fn() => $this->getSalesForecast() . ' ₽'),
         ];
     }
+
+
+
+
 
     /**
      * Регистрируем ресурсы на панели администратора
@@ -65,6 +71,11 @@ class Dashboard extends Page
     private function getProductsCount(): int
     {
         return DB::table('products')->count(); // Прямой SQL-запрос для подсчёта товаров
+    }
+
+    private function getCategoriesCount(): int
+    {
+        return DB::table('categories')->count(); // Прямой SQL-запрос для подсчёта категорий
     }
 
     private function getTotalEarnings(): float
