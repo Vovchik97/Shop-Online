@@ -7,7 +7,6 @@ namespace App\Providers;
 use App\MoonShine\Resources\CategoryResource;
 use App\MoonShine\Resources\ProductResource;
 use MoonShine\Providers\MoonShineApplicationServiceProvider;
-use MoonShine\MoonShine;
 use MoonShine\Menu\MenuGroup;
 use MoonShine\Menu\MenuItem;
 use MoonShine\Resources\MoonShineUserResource;

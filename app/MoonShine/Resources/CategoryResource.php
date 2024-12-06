@@ -13,8 +13,6 @@ use MoonShine\Decorations\Block;
 use MoonShine\Fields\ID;
 use MoonShine\Fields\Text;
 use MoonShine\Fields\Field;
-use MoonShine\ActionButtons\ActionButtons; // Для работы с кнопками действий
-use MoonShine\ActionButtons\ActionButton; // Для создания кнопок действий
 
 /**
  * @extends ModelResource<Category>

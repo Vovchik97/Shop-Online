@@ -51,10 +51,4 @@ class OrderController extends Controller
 
         return view('orders.history', compact('orders'));
     }
-
-    public function show($id)
-    {
-        $order = Order::with('cartItems.product')->findOrFail($id);
-        return view('orders.show', compact('order'));
-    }
 }

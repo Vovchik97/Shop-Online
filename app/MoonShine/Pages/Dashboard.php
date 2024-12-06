@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\MoonShine\Pages;
 
 use App\Models\Order;
-use App\Models\Product;
 use App\MoonShine\Resources\CategoryResource;
 use App\MoonShine\Resources\ProductResource;
 use Illuminate\Support\Facades\DB;

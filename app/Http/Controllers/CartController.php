@@ -47,7 +47,6 @@ class CartController extends Controller
 
         // Возвращаемся на ту же страницу
         return back();
-        //return redirect()->route('home')->with('success', 'Товар добавлен в корзину');
     }
 
 
