@@ -27,13 +27,21 @@
             </form>
             <ul class="navbar-nav">
                 @auth
-                    @if (!request()->is('cart*'))
-                        <li class="nav-item">
-                            <a href="{{ route('cart.index') }}" class="btn btn-outline-primary me-2">
-                                🛒 Корзина
-                            </a>
-                        </li>
+                    @if(auth()->check() && auth()->user()->role === 'admin')
+                        <li><a href="{{ url('/admin-panel') }}" class="btn btn-outline-primary me-2">Админ-панель</a></li>
                     @endif
+                        @if (!request()->is('cart*'))
+                            <li class="nav-item">
+                                <a href="{{ route('cart.index') }}" class="btn btn-outline-primary me-2">
+                                    🛒 Корзина
+                                </a>
+                            </li>
+                        @endif
+                    <li class="nav-item">
+                        <a href="{{ route('orders.history') }}" class="btn btn-outline-primary me-2">
+                            <i class="bi bi-cart"></i> История заказов
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="btn btn-outline-danger" href="{{ route('logout') }}"
                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -74,31 +82,37 @@
     @else
         <div class="row">
             @foreach ($cartItems as $item)
-                <div class="col-md-4">
-                    <div class="card mb-3 shadow-sm">
+                <div class="col-lg-4 col-md-6 mb-4 d-flex align-items-stretch">
+                    <div class="card w-100 d-flex flex-column">
                         <img src="{{ asset('storage/' . $item->product->image) }}" class="card-img-top" alt="{{ $item->product->name }}">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $item->product->name }}</h5>
-                            <p class="card-text">
+                        <div class="card-body d-flex flex-column">
+                            <!-- Заголовок с фиксированной высотой -->
+                            <h5 class="card-title text-truncate" style="max-width: 100%; min-height: 3rem;">
+                                {{ $item->product->name }}
+                            </h5>
+                            <p class="card-text mb-3">
                                 <strong>Цена:</strong> {{ $item->product->price }} ₽<br>
                                 <strong>Количество:</strong> {{ $item->quantity }}<br>
                                 <strong>Итого:</strong> {{ $item->product->price * $item->quantity }} ₽
                             </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <!-- Форма обновления -->
-                                <form action="{{ route('cart.store') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="product_id" value="{{ $item->product_id }}">
-                                    <input type="number" name="quantity" value="{{ $item->quantity }}" min="1" class="form-control mb-2" style="width: 80px; display: inline-block;">
-                                    <button type="submit" class="btn btn-outline-primary btn-sm">Обновить</button>
-                                </form>
+                            <!-- Блок с кнопками выравнивается снизу -->
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <!-- Форма обновления -->
+                                    <form action="{{ route('cart.store') }}" method="POST" class="d-flex align-items-center">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{ $item->product_id }}">
+                                        <input type="number" name="quantity" value="{{ $item->quantity }}" min="1" class="form-control me-2" style="width: 80px;">
+                                        <button type="submit" class="btn btn-outline-primary btn-sm">Обновить</button>
+                                    </form>
 
-                                <!-- Форма удаления товара из корзины -->
-                                <form action="{{ route('cart.destroy', $item->id) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE') <!-- Указываем метод DELETE -->
-                                    <button type="submit" class="btn btn-outline-danger btn-sm">Удалить</button>
-                                </form>
+                                    <!-- Форма удаления -->
+                                    <form action="{{ route('cart.destroy', $item->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">Удалить</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>

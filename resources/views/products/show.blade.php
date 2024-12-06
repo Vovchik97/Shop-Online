@@ -27,9 +27,17 @@
             </form>
             <ul class="navbar-nav">
                 @auth
+                    @if(auth()->check() && auth()->user()->role === 'admin')
+                        <li><a href="{{ url('/admin-panel') }}" class="btn btn-outline-primary me-2">Админ-панель</a></li>
+                    @endif
                     <li class="nav-item">
                         <a href="{{ route('cart.index') }}" class="btn btn-outline-primary me-2">
                             <i class="bi bi-cart"></i> 🛒 Корзина
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('orders.history') }}" class="btn btn-outline-primary me-2">
+                            <i class="bi bi-cart"></i> История заказов
                         </a>
                     </li>
                     <li class="nav-item">
@@ -58,7 +66,6 @@
 <header class="bg-primary text-white text-center py-5">
     <div class="container">
         <h1 class="display-4">{{ $product->name }}</h1>
-        <p class="lead">Цена: {{ $product->price }} ₽</p>
     </div>
 </header>
 

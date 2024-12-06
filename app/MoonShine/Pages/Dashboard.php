@@ -42,6 +42,23 @@ class Dashboard extends Page
             ValueMetric::make('Общее количество заказов')->value(fn() => $this->getOrdersCount()),
             ValueMetric::make('Общая выручка')->value(fn() => $this->getTotalEarnings() . ' ₽'),
             ValueMetric::make('Прогноз продаж (на день)')->value(fn() => $this->getSalesForecast() . ' ₽'),
+
+            // График продаж
+            LineChartMetric::make('Продажи и среднее значение заказа')
+                ->line([
+                    'Фактические продажи' => Order::query()
+                        ->selectRaw('SUM(total_price) as total, DATE_FORMAT(created_at, "%d.%m.%Y") as date')
+                        ->groupBy('date')
+                        ->pluck('total', 'date')
+                        ->toArray(),
+                    'Среднее значение заказа' => Order::query()
+                        ->selectRaw('AVG(total_price) as avg, DATE_FORMAT(created_at, "%d.%m.%Y") as date')
+                        ->groupBy('date')
+                        ->pluck('avg', 'date')
+                        ->toArray(),
+                ], ['red', 'blue']) // Красный для фактических данных, синий для средней суммы заказа
+                ->columnSpan(6) // Ширина блока для десктопной версии
+                ->withoutSortKeys() // Отключаем сортировку по ключам
         ];
     }
 

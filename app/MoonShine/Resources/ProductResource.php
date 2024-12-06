@@ -51,7 +51,6 @@ class ProductResource extends ModelResource
                     ->disk('public')
                     ->allowedExtensions(['jpg', 'jpeg', 'png', 'gif', 'webp'])
                     ->removable()
-                    ->required()
             ]),
         ];
     }
